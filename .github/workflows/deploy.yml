@@ -13,14 +13,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v4
 
-      - name: Wait for services to be healthy
+      - name: Confirm target is reachable
         run: |
-          timeout 60s sh -c 'until curl -s http://${{ secrets.EC2_HOST }}:8080 > /dev/null; do sleep 2; done'
+          timeout 60s sh -c 'until curl -s -o /dev/null -w "%{http_code}" "${{ secrets.TARGET_URL }}" | grep -qE "^[23]"; do sleep 2; done'
 
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://${{ secrets.EC2_HOST }}:8080'
+          target: ${{ secrets.TARGET_URL }}
           fail_action: false
           allow_issue_writing: false
