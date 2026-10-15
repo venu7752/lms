@@ -39,9 +39,9 @@ import requests
 TARGET_URL = os.environ["TARGET_URL"].rstrip("/")
 
 # --- TODO: real login details, captured from Network tab -----------------
-LOGIN_URL = f"{TARGET_URL}/login"                 # TODO: real login POST URL
-LOGIN_FIELD_USERNAME = "username"                  # TODO: real field name
-LOGIN_FIELD_PASSWORD = "password"                  # TODO: real field name
+LOGIN_URL = f"{TARGET_URL}/login.aspx"                 # TODO: real login POST URL
+LOGIN_FIELD_USERNAME = "txtLogin"                  # TODO: real field name
+LOGIN_FIELD_PASSWORD = "txtPwd"                  # TODO: real field name
 SESSION_COOKIE_NAME = "ASP.NET_SessionId"           # TODO: real cookie name
 LOGGED_IN_MARKER = "Logout"                         # TODO: text only shown when logged in
 LOGGED_OUT_MARKER = "Sign In"                       # TODO: text only shown when logged out
