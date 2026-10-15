@@ -2,10 +2,11 @@
 Consolidated test harness: Authentication & Session Security +
 Authorization (horizontal + vertical) + Tenant Isolation.
 
-Covers plan phases 3 and 4 in one script, for:
+Covers authentication/session security and configured authorization/tenant checks for:
   - jmitchell  (full access)
   - ptest      (full access)
-  - lrogahn    (underwriter only)
+
+Lrogahn has been removed from this two-account test configuration.
 
 =====================  FILL THESE IN FOR YOUR APP  =====================
 Everything marked TODO below needs a real value captured from browsing
@@ -21,7 +22,6 @@ locally — never hardcode credentials):
     TARGET_URL
     JMITCHELL_USER, JMITCHELL_PASS
     PTEST_USER,     PTEST_PASS
-    LROGAHN_USER,   LROGAHN_PASS
 
 Only run this against a target you are explicitly authorized to test.
 This script performs READ (GET) requests only. Do not add state-changing
@@ -68,7 +68,6 @@ OBJECT_ENDPOINT_TEMPLATES = [
 OWN_RECORD_IDS = {
     "jmitchell": "REPLACE_WITH_JMITCHELL_RECORD_ID",
     "ptest": "REPLACE_WITH_PTEST_RECORD_ID",
-    "lrogahn": "REPLACE_WITH_LROGAHN_RECORD_ID",
 }
 # ---------------------------------------------------------------------------
 
@@ -82,11 +81,6 @@ ACCOUNTS = {
         "username": os.environ["PTEST_USER"],
         "password": os.environ["PTEST_PASS"],
         "role": "full_access",
-    },
-    "lrogahn": {
-        "username": os.environ["LROGAHN_USER"],
-        "password": os.environ["LROGAHN_PASS"],
-        "role": "underwriter_only",
     },
 }
 
@@ -314,8 +308,14 @@ def main():
     if not FULL_ACCESS_ONLY_ENDPOINTS and not OBJECT_ENDPOINT_TEMPLATES:
         print(
             "WARNING: FULL_ACCESS_ONLY_ENDPOINTS and OBJECT_ENDPOINT_TEMPLATES "
-            "are both empty. Fill in real endpoint URLs at the top of this "
-            "script before results will mean anything.",
+            "are both empty. Authorization and IDOR/tenant checks will produce "
+            "no results until you configure real, authorized endpoint URLs.",
+            file=sys.stderr,
+        )
+    if any(value.startswith("REPLACE_WITH") for value in OWN_RECORD_IDS.values()):
+        print(
+            "WARNING: Replace placeholder OWN_RECORD_IDS values with real test "
+            "record IDs before cross-account record checks can run.",
             file=sys.stderr,
         )
 
@@ -323,8 +323,9 @@ def main():
     for account_key in ACCOUNTS:
         sessions[account_key] = login(account_key)
 
-    # Vertical: check lrogahn (and, as a sanity check, the full-access accounts)
-    # against full-access-only endpoints
+    # Vertical authorization: test each configured account against the
+    # configured full-access-only endpoints. Since both accounts are marked
+    # full_access, this does not test a lower-privilege role.
     for account_key, session in sessions.items():
         test_vertical_authorization(session, account_key)
 
