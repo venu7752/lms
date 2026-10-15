@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Auth / Authorization / Tenant Isolation Test Report</title>
+<style>
+  body { font-family: -apple-system, Arial, sans-serif; margin: 2rem; color: #1a1a1a; background: #fafafa; }
+  h1 { margin-bottom: 0.25rem; }
+  .meta { color: #666; margin-bottom: 1.5rem; }
+  .summary { padding: 1rem; border-radius: 8px; margin-bottom: 2rem;
+              background: #e8f7ee;
+              border: 1px solid #9fd9b5; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 2rem; background: #fff; }
+  th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; font-size: 0.9rem; }
+  th { background: #f0f0f0; }
+  tr.flagged { background: #fde8e8; }
+  tr.ok { background: #f3fbf5; }
+  .empty { text-align: center; color: #999; font-style: italic; }
+  h2 { border-bottom: 2px solid #eee; padding-bottom: 0.3rem; margin-top: 2rem; }
+  .errors { color: #b00020; }
+</style>
+</head>
+<body>
+  <h1>Authentication / Authorization / Tenant Isolation Test Report</h1>
+  <div class="meta">Generated 2026-10-15 14:48:08 UTC &middot; Target: https://demo1.artemissurety.com</div>
+
+  <div class="summary">
+    <strong>0 potential issue(s) flagged</strong> across authentication,
+    authorization, and tenant isolation checks. Rows highlighted in red indicate
+    a flagged result (e.g. a session usable after logout, or an account able to
+    reach a record/endpoint it should not).
+  </div>
+
+  <h2>1. Authentication &amp; Session Security</h2>
+  <table>
+    <tr><th>Account</th><th>Test</th><th>Login Status</th><th>Status Code</th><th>Flagged</th></tr>
+    <tr class=""><td>jmitchell</td><td></td><td>200</td><td></td><td></td></tr>
+<tr class=""><td>ptest</td><td></td><td>200</td><td></td><td></td></tr>
+<tr class="ok"><td>jmitchell</td><td>post_logout_session_reuse</td><td></td><td>404</td><td>False</td></tr>
+<tr class="ok"><td>ptest</td><td>post_logout_session_reuse</td><td></td><td>404</td><td>False</td></tr>
+  </table>
+
+  <h2>2. Authorization — Vertical (Privilege Escalation)</h2>
+  <table>
+    <tr><th>Endpoint</th><th>Tested As</th><th>Role</th><th>Status Code</th><th>Flagged</th></tr>
+    <tr><td colspan="99" class="empty">No results in this section.</td></tr>
+  </table>
+
+  <h2>3. Authorization — Horizontal (IDOR) &amp; Tenant Isolation</h2>
+  <table>
+    <tr><th>Endpoint</th><th>Record Owner</th><th>Accessed By</th><th>Status Code</th><th>Flagged</th></tr>
+    <tr><td colspan="99" class="empty">No results in this section.</td></tr>
+  </table>
+
+  <h2>Errors</h2>
+  <p class="errors">Login did not appear to succeed for jmitchell; Login did not appear to succeed for ptest</p>
+</body>
+</html>
