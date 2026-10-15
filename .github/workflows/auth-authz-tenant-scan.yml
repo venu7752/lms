@@ -1,3 +1,4 @@
+
 name: Authentication, Authorization & Tenant Isolation Tests
 
 on:
@@ -7,7 +8,8 @@ jobs:
   auth-authz-tenant-tests:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # needed to commit the report back into the repo
+      contents: write
+
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
@@ -30,11 +32,8 @@ jobs:
           JMITCHELL_PASS: ${{ secrets.JMITCHELL_PASSWORD }}
           PTEST_USER: ${{ secrets.PTEST_USERNAME }}
           PTEST_PASS: ${{ secrets.PTEST_PASSWORD }}
-          LROGAHN_USER: ${{ secrets.LROGAHN_USERNAME }}
-          LROGAHN_PASS: ${{ secrets.LROGAHN_PASSWORD }}
           REPORT_DIR: reports/auth-authz-tenant
 
-      # Report is uploaded as a workflow artifact regardless of the commit step below
       - name: Upload report as workflow artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,8 +41,6 @@ jobs:
           name: auth-authz-tenant-html-report
           path: reports/auth-authz-tenant/
 
-      # Also commit the HTML report into the repo itself, so it's browsable
-      # directly in GitHub without downloading an artifact.
       - name: Commit report to repository
         if: always()
         run: |
